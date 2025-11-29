@@ -88,6 +88,10 @@ Cookies are stored in `~/.ppx-mcp/settings.json` (persists across updates).
 4. Find `perplexity_ask` request → copy Cookie header
 5. Edit `settings.json` directly
 
+## Credits
+
+Inspired by [perplexity-webui-scraper](https://github.com/henrique-coder/perplexity-webui-scraper).
+
 ## License
 
 MIT
