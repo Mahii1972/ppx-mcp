@@ -1,11 +1,11 @@
 {
-  "name": "ppx-mcp",
+  "name": "ppx-sub-mcp",
   "version": "1.0.0",
-  "description": "MCP server for Perplexity AI queries",
+  "description": "Unofficial MCP server that utilizes your Perplexity Pro subscription for AI queries with web search",
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "ppx-mcp": "./dist/index.js"
+    "ppx-sub-mcp": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -21,7 +21,7 @@
   "author": "Aravind M",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Mahii1972/ppx-mcp"
   },
   "license": "MIT",
   "files": [

@@ -9,12 +9,12 @@ Uses your Perplexity Pro subscription instead of the Perplexity API — no API k
 ## Installation
 
 ```bash
-npm install -g ppx-mcp
+npm install -g ppx-sub-mcp
 ```
 
 Or run directly with npx:
 ```bash
-npx ppx-mcp
+npx ppx-sub-mcp
 ```
 
 ## Usage with Kiro / Claude Desktop
@@ -26,7 +26,7 @@ Add to your MCP config:
   "mcpServers": {
     "ppx": {
       "command": "npx",
-      "args": ["ppx-mcp"]
+      "args": ["ppx-sub-mcp"]
     }
   }
 }
