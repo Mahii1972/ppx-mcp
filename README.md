@@ -1,8 +1,10 @@
 # PPX-MCP
 
-MCP server for querying Perplexity AI with real-time web search.
+**Unofficial** MCP server for Perplexity AI with real-time web search.
 
-Pure Node.js — uses `got-scraping` for Cloudflare bypass.
+Uses your Perplexity Pro subscription instead of the Perplexity API — no API keys needed, just your browser cookies. Supports model selection including GPT-5.1, Claude 4.5, Gemini, Grok, and more.
+
+> ⚠️ **Disclaimer:** This is an unofficial project and is not affiliated with, endorsed by, or associated with Perplexity AI in any way.
 
 ## Installation
 
@@ -79,3 +81,5 @@ Cookies are stored in `settings.json` in the package directory.
 ## License
 
 MIT
+
+This is an unofficial project and is not affiliated with Perplexity AI.
