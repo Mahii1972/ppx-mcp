@@ -12,12 +12,19 @@
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js"
   },
-  "keywords": ["mcp", "perplexity", "ai"],
+  "keywords": [
+    "mcp",
+    "perplexity",
+    "ai"
+  ],
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.52.0",
     "@modelcontextprotocol/sdk": "^1.12.1",
     "got-scraping": "^4.0.8",
+    "puppeteer-core": "^24.31.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -76,17 +76,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       },
     },
     {
-      name: "perplexity_set_cookies",
-      description: "Set Perplexity cookies for authentication. Get these from Firefox DevTools after logging into perplexity.ai",
+      name: "perplexity_login",
+      description: "Opens a browser window to log in to Perplexity and automatically saves cookies. User must complete login in the browser, then the cookies are extracted and saved.",
       inputSchema: {
         type: "object",
-        properties: {
-          cookies: {
-            type: "string",
-            description: "The cookie string from browser DevTools",
-          },
-        },
-        required: ["cookies"],
+        properties: {},
       },
     },
   ],
@@ -137,34 +131,22 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
   }
 
-  if (name === "perplexity_set_cookies") {
-    const newCookies = args?.cookies as string;
-    if (!newCookies) {
-      return {
-        content: [{ type: "text", text: "Error: cookies is required" }],
-        isError: true,
-      };
-    }
-
+  if (name === "perplexity_login") {
     try {
-      const { writeFileSync } = await import("fs");
-      const settings = existsSync(SETTINGS_PATH)
-        ? JSON.parse(readFileSync(SETTINGS_PATH, "utf-8"))
-        : {};
-      settings.cookies = newCookies;
-      writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
-      
-      // Update client
-      cookies = newCookies;
-      client = new PerplexityClient(cookies);
-      
+      const { exec } = await import("child_process");
+      const loginScript = join(__dirname, "get-cookies.js");
+
+      // Open a new terminal window on Windows with the login script (quoted for spaces)
+      const cmd = `start cmd /c node "${loginScript}"`;
+      exec(cmd, { cwd: join(__dirname, "..") });
+
       return {
-        content: [{ type: "text", text: "Cookies saved to settings.json" }],
+        content: [{ type: "text", text: "A new terminal window opened with the browser. Please log in to Perplexity, then press ENTER in that terminal to save cookies." }],
       };
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       return {
-        content: [{ type: "text", text: `Error saving cookies: ${message}` }],
+        content: [{ type: "text", text: `Error launching login: ${message}` }],
         isError: true,
       };
     }
