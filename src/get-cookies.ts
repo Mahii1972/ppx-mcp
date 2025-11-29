@@ -1,15 +1,20 @@
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import { writeFileSync, readFileSync, existsSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from "fs";
+import { join } from "path";
+import { homedir } from "os";
 import type { Cookie } from "puppeteer-core";
 
 // @ts-ignore - puppeteer-extra types are incomplete
 puppeteer.use(StealthPlugin());
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const SETTINGS_PATH = join(__dirname, "..", "settings.json");
+const CONFIG_DIR = join(homedir(), ".ppx-mcp");
+const SETTINGS_PATH = join(CONFIG_DIR, "settings.json");
+
+// Ensure config directory exists
+if (!existsSync(CONFIG_DIR)) {
+  mkdirSync(CONFIG_DIR, { recursive: true });
+}
 
 // Common Chrome paths on Windows
 const CHROME_PATHS = [
@@ -63,7 +68,7 @@ async function getCookies() {
   settings.cookies = cookieString;
   writeFileSync(SETTINGS_PATH, JSON.stringify(settings, null, 2));
 
-  console.log("\n✓ Cookies saved to settings.json");
+  console.log(`\n✓ Cookies saved to ${SETTINGS_PATH}`);
   console.log(`  Found ${cookies.length} cookies`);
 
   await browser.close();

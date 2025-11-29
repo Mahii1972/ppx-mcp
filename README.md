@@ -6,6 +6,15 @@ Uses your Perplexity Pro subscription instead of the Perplexity API — no API k
 
 > ⚠️ **Disclaimer:** This is an unofficial project and is not affiliated with, endorsed by, or associated with Perplexity AI in any way.
 
+## Platform Support
+
+| Platform | Status |
+|----------|--------|
+| Windows + Chrome | ✅ Tested |
+| macOS / Linux | ⚠️ Untested — may need tweaks |
+
+The login tool requires Chrome to be installed. On non-Windows platforms, you may need to manually set cookies or adjust the Chrome path in the code.
+
 ## Installation
 
 ```bash
@@ -32,7 +41,7 @@ Add to your MCP config:
 }
 ```
 
-Cookies are stored in `settings.json` in the package directory.
+Cookies are stored in `~/.ppx-mcp/settings.json` (persists across updates).
 
 ## Tools
 
@@ -41,6 +50,7 @@ Cookies are stored in `settings.json` in the package directory.
 | `perplexity_ask` | Ask Perplexity AI with web search |
 | `perplexity_list_models` | List available models |
 | `perplexity_login` | Open browser to log in and auto-save cookies |
+| `perplexity_status` | Check config and cookie status |
 
 ### perplexity_ask
 

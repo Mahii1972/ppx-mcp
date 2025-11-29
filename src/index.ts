@@ -5,13 +5,20 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { readFileSync, existsSync } from "fs";
+import { readFileSync, existsSync, mkdirSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { homedir } from "os";
 import { PerplexityClient } from "./perplexity.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SETTINGS_PATH = join(__dirname, "..", "settings.json");
+const CONFIG_DIR = join(homedir(), ".ppx-mcp");
+const SETTINGS_PATH = join(CONFIG_DIR, "settings.json");
+
+// Ensure config directory exists
+if (!existsSync(CONFIG_DIR)) {
+  mkdirSync(CONFIG_DIR, { recursive: true });
+}
 
 const MODELS: Record<string, { id: string; name: string; desc: string }> = {
   sonar: { id: "turbo", name: "Sonar", desc: "Perplexity's fast model" },
@@ -38,8 +45,11 @@ function loadCookies(): string {
   return process.env.PERPLEXITY_COOKIES || "";
 }
 
-let cookies = loadCookies();
-let client = new PerplexityClient(cookies);
+// Get client with fresh cookies (reloads from file each time)
+function getClient(): PerplexityClient {
+  const cookies = loadCookies();
+  return new PerplexityClient(cookies);
+}
 
 const server = new Server(
   { name: "ppx-mcp", version: "1.0.0" },
@@ -83,6 +93,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         properties: {},
       },
     },
+    {
+      name: "perplexity_status",
+      description: "Check the status of Perplexity MCP configuration and cookies.",
+      inputSchema: {
+        type: "object",
+        properties: {},
+      },
+    },
   ],
 }));
 
@@ -90,9 +108,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   if (name === "perplexity_ask") {
+    const cookies = loadCookies();
     if (!cookies) {
       return {
-        content: [{ type: "text", text: "Error: PERPLEXITY_COOKIES environment variable not set" }],
+        content: [{ type: "text", text: "Error: No cookies found. Run perplexity_login first or set PERPLEXITY_COOKIES env var." }],
         isError: true,
       };
     }
@@ -109,6 +128,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const model = MODELS[modelKey] || MODELS.sonar;
 
     try {
+      const client = getClient();
       const result = await client.ask(query, model.id);
       return {
         content: [{ type: "text", text: result.answer || "No answer received" }],
@@ -150,6 +170,27 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         isError: true,
       };
     }
+  }
+
+  if (name === "perplexity_status") {
+    const settingsExists = existsSync(SETTINGS_PATH);
+    const cookies = loadCookies();
+    
+    if (!settingsExists) {
+      return {
+        content: [{ type: "text", text: `❌ No settings file found at ${SETTINGS_PATH}\n\nRun perplexity_login to set up your cookies.` }],
+      };
+    }
+    
+    if (!cookies) {
+      return {
+        content: [{ type: "text", text: `⚠️ Settings file exists but no cookies found.\n\nRun perplexity_login to set up your cookies.` }],
+      };
+    }
+    
+    return {
+      content: [{ type: "text", text: `✓ Settings file: ${SETTINGS_PATH}\n✓ Cookies: Found\n\nIf queries still fail, your session token may have expired. Run perplexity_login to refresh.` }],
+    };
   }
 
   return {
