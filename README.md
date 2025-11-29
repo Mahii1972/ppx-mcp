@@ -45,7 +45,22 @@ Cookies are stored in `settings.json` in the package directory.
 | Parameter | Required | Description |
 |-----------|----------|-------------|
 | `query` | Yes | Question to ask |
-| `model` | No | `sonar`, `best`, `research`, `gpt51`, `claude`, `gemini`, `grok`, `kimi` |
+| `model` | No | See models below (default: `sonar`) |
+
+## Available Models
+
+| Model | Description |
+|-------|-------------|
+| `sonar` | Sonar - Perplexity's fast model |
+| `best` | Best - Auto-selects the best model |
+| `research` | Research - Deep research |
+| `gpt51` | GPT-5.1 - OpenAI's latest |
+| `gpt51-thinking` | GPT-5.1 Thinking - With reasoning |
+| `claude` | Claude 4.5 - Anthropic's newest |
+| `claude-thinking` | Claude 4.5 Thinking - With reasoning |
+| `gemini` | Gemini 3 Pro - Google's model |
+| `grok` | Grok 4.1 - xAI's model |
+| `kimi` | Kimi K2 - Moonshot's model |
 
 ## Getting Cookies
 
