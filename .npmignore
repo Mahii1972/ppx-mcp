@@ -1,0 +1,18 @@
+# Source files
+src/
+test.ts
+
+# Config files
+tsconfig.json
+settings.json
+oldset.json
+
+# Dev/local files
+.git/
+.kiro/
+node_modules/
+*.log
+
+# IDE
+.vscode/
+.idea/
