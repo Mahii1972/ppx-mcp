@@ -2,7 +2,10 @@
   "mcpServers": {
     "ppx": {
       "command": "npx",
-      "args": ["ppx-sub-mcp"]
+      "args": [
+        "ppx-sub-mcp"
+      ],
+      "disabled": false
     }
   }
 }

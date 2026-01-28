@@ -117,8 +117,10 @@ export class PerplexityClient {
             conversationUuid = data.backend_uuid;
           }
 
-          // Extract answer from diff_block patches
+          // Extract answer from diff_block patches (only from ask_text, not ask_text_0_markdown to avoid duplicates)
           for (const block of data.blocks || []) {
+            if (block.intended_usage !== "ask_text") continue;
+            
             const diffBlock = block.diff_block;
             if (diffBlock?.field === "markdown_block") {
               for (const patch of diffBlock.patches || []) {
