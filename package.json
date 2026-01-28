@@ -1,6 +1,6 @@
 {
   "name": "ppx-sub-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Unofficial MCP server that utilizes your Perplexity Pro subscription for AI queries with web search",
   "type": "module",
   "main": "dist/index.js",
