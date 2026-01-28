@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ppx": {
+      "command": "npx",
+      "args": ["ppx-sub-mcp"]
+    }
+  }
+}

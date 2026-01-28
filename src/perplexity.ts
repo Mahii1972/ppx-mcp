@@ -104,8 +104,8 @@ export class PerplexityClient {
   }
 
   private parseResponse(text: string): PerplexityResponse {
-    let answer: string | null = null;
     let conversationUuid: string | null = null;
+    const chunks: string[] = [];
 
     for (const line of text.split("\n")) {
       const trimmed = line.trim();
@@ -123,10 +123,19 @@ export class PerplexityClient {
             if (diffBlock?.field === "markdown_block") {
               for (const patch of diffBlock.patches || []) {
                 const value = patch.value;
-                if (typeof value === "object" && value?.answer) {
-                  answer = value.answer;
+                // New format: chunks array with streaming text
+                if (typeof value === "object" && value?.chunks) {
+                  // Initial chunk with array
+                  chunks.push(...value.chunks);
+                } else if (typeof value === "string" && patch.path?.includes("/chunks/")) {
+                  // Incremental chunk additions
+                  chunks.push(value);
+                }
+                // Legacy format: answer field
+                else if (typeof value === "object" && value?.answer) {
+                  return { answer: value.answer, conversationUuid };
                 } else if (typeof value === "string" && patch.path?.endsWith("/answer")) {
-                  answer = value;
+                  return { answer: value, conversationUuid };
                 }
               }
             }
@@ -137,6 +146,8 @@ export class PerplexityClient {
       }
     }
 
+    // Join all chunks to form the complete answer
+    const answer = chunks.length > 0 ? chunks.join("") : null;
     return { answer, conversationUuid };
   }
 }
